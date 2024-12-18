@@ -14,17 +14,21 @@ struct WorkoutCreationView: View {
             Form {
                 Section(header: Text("Workout Information")) {
                     TextField("Nome del Workout", text: $name)
-                    Stepper("Calorie: \(calories)", value: $calories, in: 0...1000)
-                    Stepper("Ripetizioni: \(repetitions)", value: $repetitions, in: 0...100)
-                    Stepper("Set: \(sets)", value: $sets, in: 0...10)
+                    HStack {
+                                            Text("Calorie: \(calories)")
+                                            Slider(value: Binding(
+                                                get: { Double(calories) },
+                                                set: { calories = Int($0) }
+                                            ), in: 0...1000, step: 1)
+                                        }
                 }
                 
                 Button("Salva") {
                     let newWorkout = Workout(
                         name: name,
                         calories: calories,
-                        repetitions: repetitions,
-                        sets: sets
+                        repetitions: 0,
+                        sets: 0
                     )
                     
                     modelContext.insert(newWorkout)
