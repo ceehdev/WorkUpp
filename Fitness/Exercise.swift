@@ -3,16 +3,13 @@ import SwiftData
 
 @Model
 class Exercise {
-    @Attribute var id: UUID
     @Attribute var name: String
     @Attribute var repetitions: Int
     @Attribute var sets: Int
-    @Attribute var restTime: Int 
+    @Attribute var restTime: Int
+    @Relationship var workout: Workout?
 
-    @Relationship var workout: Workout
-
-    init(id: UUID = UUID(), name: String, repetitions: Int, sets: Int, restTime: Int, workout: Workout) {
-        self.id = id
+    init(name: String, repetitions: Int, sets: Int, restTime: Int, workout: Workout?) {
         self.name = name
         self.repetitions = repetitions
         self.sets = sets
