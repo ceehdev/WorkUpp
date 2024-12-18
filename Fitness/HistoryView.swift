@@ -1,45 +1,29 @@
 import SwiftUI
+import SwiftData
 
 struct HistoryView: View {
-    @State private var completedWorkouts: [CompletedWorkout] = [
-        CompletedWorkout(name: "Workout 1", completionDate: Date()),
-        CompletedWorkout(name: "Workout 2", completionDate: Date().addingTimeInterval(-86400)) 
-    ]
-    
+    @Query var workoutHistories: [WorkoutHistory] // Correct Query syntax
+
     var body: some View {
         NavigationView {
-            VStack {
-                Text("Workout History")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding()
-
-                List(completedWorkouts, id: \.name) { workout in
-                    
-                    NavigationLink(destination: WorkoutHistoryDetailView(workout: workout)) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(workout.name)
-                                    .font(.headline)
-                                Text("Completed on \(formattedDate(workout.completionDate))")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }
-                            Spacer()
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
+            List {
+                ForEach(workoutHistories, id: \.self) { history in
+                    NavigationLink(destination: WorkoutHistoryDetailView(workout: history)) {
+                        VStack(alignment: .leading) {
+                            Text(history.name)
+                                .font(.headline)
+                            Text("Completed on \(formattedDate(history.completionDate))")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
                         }
-                        .padding()
+                        .padding(.vertical, 8)
                     }
                 }
-                .listStyle(PlainListStyle())
-                .background(Color.white)
             }
-            .navigationTitle("History")
+            .navigationTitle("Workout History")
         }
     }
 
-    
     private func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -49,4 +33,5 @@ struct HistoryView: View {
 
 #Preview {
     HistoryView()
+        .modelContainer(for: [WorkoutHistory.self])
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct WorkoutHistoryDetailView: View {
-    let workout: CompletedWorkout
+    let workout: WorkoutHistory // Change from CompletedWorkout to WorkoutHistory
 
     var body: some View {
         ScrollView {
@@ -11,47 +11,34 @@ struct WorkoutHistoryDetailView: View {
                 Text(workout.name)
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(.primary)
-                    .padding(.top, 20)
-                    .accessibilityLabel("Workout Name")
-                    .accessibilityValue(workout.name)
+                    .padding()
 
                 Text("Completed on \(formattedDate(workout.completionDate))")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .padding(.bottom, 10)
-                    .accessibilityLabel("Completion Date")
-                    .accessibilityValue(formattedDate(workout.completionDate))
 
                 Divider()
-                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Workout Summary")
                         .font(.headline)
                         .foregroundColor(.blue)
-                        .accessibilityLabel("Workout Summary")
 
                     HStack {
                         Image(systemName: "clock.fill")
                             .foregroundColor(.blue)
-                            .accessibilityHidden(true)
-                        Text("This workout included 5 exercises for a total of 45 minutes.")
+                        Text("Duration: \(workout.duration) minutes") // Adjust property names as needed
                             .font(.body)
                             .foregroundColor(.primary)
-                            .accessibilityLabel("Workout Duration")
-                            .accessibilityValue("5 exercises for 45 minutes")
                     }
 
                     HStack {
                         Image(systemName: "flame.fill")
                             .foregroundColor(.red)
-                            .accessibilityHidden(true)
-                        Text("Calories burned: 400")
+                        Text("Calories burned: \(workout.caloriesBurned)")
                             .font(.body)
                             .foregroundColor(.primary)
-                            .accessibilityLabel("Calories Burned")
-                            .accessibilityValue("400 calories")
                     }
                 }
                 .padding()
@@ -75,6 +62,15 @@ struct WorkoutHistoryDetailView: View {
     }
 }
 
+
 #Preview {
-    WorkoutHistoryDetailView(workout: CompletedWorkout(name: "Workout D'ESEMPIO", completionDate: Date()))
+    WorkoutHistoryDetailView(
+        workout: WorkoutHistory(
+            id: UUID(), // Generate a UUID
+            name: "Example Workout",
+            completionDate: Date(),
+            caloriesBurned: 300,
+            duration: 45 // If `duration` is part of the model
+        )
+    )
 }

@@ -14,18 +14,23 @@ struct ContentView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding()
+                    .accessibilityLabel("Workout List Title")
+                    .accessibilityHint("Displays a list of all workouts.")
 
                 List(workouts) { workout in
                     NavigationLink(destination: WorkoutDetailView(workout: workout)) {
                         HStack {
                             Image(systemName: "figure.walk.circle.fill")
                                 .foregroundColor(.blue)
+                                .accessibilityHidden(true) // Decorative image, no label needed
                             Text(workout.name)
                                 .font(.title2)
                                 .foregroundColor(.black)
+                                .accessibilityLabel("Workout: \(workout.name)")
                         }
                         .padding()
                     }
+                    .accessibilityHint("Tap to view details of the workout named \(workout.name).")
                 }
                 .listStyle(PlainListStyle())
                 
@@ -40,8 +45,11 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                         .padding(.bottom, 80)
                 }
+                .accessibilityLabel("Add Workout Button")
+                .accessibilityHint("Tap to create a new workout.")
                 .fullScreenCover(isPresented: $isCreatingWorkout) {
                     WorkoutCreationView()
+                        .accessibilityLabel("Workout Creation Screen")
                 }
             }
             .background(Color.white)
@@ -52,5 +60,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Workout.self, Exercise.self]) 
+        .modelContainer(for: [Workout.self, Exercise.self])
 }

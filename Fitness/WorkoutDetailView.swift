@@ -1,8 +1,10 @@
 import SwiftUI
+import SwiftData
 
 struct WorkoutDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var showingCreateExercise = false
+    @State private var showingCompletionAlert = false
 
     var workout: Workout
 
@@ -20,20 +22,57 @@ struct WorkoutDetailView: View {
             }
             .navigationTitle(workout.name)
 
-            Button(action: {
-                showingCreateExercise.toggle()
-            }) {
-                Text("Add Exercise")
-                    .frame(maxWidth: 150)
-                    .padding()
-                    .background(Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(50)
+            HStack {
+                Button(action: {
+                    showingCreateExercise.toggle()
+                }) {
+                    Text("Add Exercise")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding()
+                .sheet(isPresented: $showingCreateExercise) {
+                    ExerciseCreationView(workout: workout)
+                }
+
+                Button(action: {
+                    finishWorkout()
+                }) {
+                    Text("Finish Workout")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding()
+                .alert("Workout Finished", isPresented: $showingCompletionAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("Workout Saved to the History!")
+                }
             }
-            .padding()
-            .sheet(isPresented: $showingCreateExercise) {
-                ExerciseCreationView(workout: workout)
-            }
+        }
+    }
+
+    private func finishWorkout() {
+        // Create a new WorkoutHistory based on this workout.
+        let workoutHistory = WorkoutHistory(
+            name: workout.name,
+            completionDate: Date(),
+            caloriesBurned: workout.calories, duration: 5
+        )
+
+        // Save the new workout history.
+        do {
+            modelContext.insert(workoutHistory)
+            try modelContext.save()
+            showingCompletionAlert = true
+        } catch {
+            print("Failed to save workout history: \(error)")
         }
     }
 }

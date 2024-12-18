@@ -17,9 +17,21 @@ struct ExerciseCreationView: View {
             Form {
                 Section(header: Text("Exercise Details")) {
                     TextField("Exercise Name", text: $name)
+                        .accessibilityLabel("Exercise Name Field")
+                        .accessibilityHint("Enter the name of the exercise.")
+
                     Stepper("Repetitions: \(repetitions)", value: $repetitions, in: 0...100)
+                        .accessibilityLabel("Repetitions Stepper")
+
                     Stepper("Sets: \(sets)", value: $sets, in: 0...10)
+                        .accessibilityLabel("Sets Stepper")
+                        .accessibilityHint("Adjust the number of sets.")
+                        .accessibilityValue("\(sets) sets")
+
                     Stepper("Rest Time: \(restTime) seconds", value: $restTime, in: 0...300)
+                        .accessibilityLabel("Rest Time Stepper")
+                        .accessibilityHint("Adjust the rest time in seconds.")
+                        .accessibilityValue("\(restTime) seconds")
                 }
 
                 Button("Save Exercise") {
@@ -30,6 +42,8 @@ struct ExerciseCreationView: View {
                 .background(Color.gray)
                 .foregroundColor(.white)
                 .cornerRadius(10)
+                .accessibilityLabel("Save Exercise Button")
+                .accessibilityHint("Tap to save the exercise.")
             }
             .navigationTitle("New Exercise")
             .navigationBarTitleDisplayMode(.inline)
@@ -59,7 +73,6 @@ struct ExerciseCreationView: View {
         }
     }
 }
-
 
 #Preview {
     let sampleWorkout = Workout(name: "Sample Workout", calories: 200, repetitions: 10, sets: 5)
